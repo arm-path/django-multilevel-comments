@@ -1,0 +1,33 @@
+{% extends 'base.html'%}
+
+{% load verbose_names %}
+<!-- File: templatetags/verbose_names.py-->
+<!--Simple tag для получения verbose_name-->
+<!--Simple tag for getting verbose_name-->
+{% load static %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    <li class="list-group-item list-group-item-dark">
+        <span class="font-weight-bold">
+            {% get_verbose_field_name object "title" %}:
+        </span>
+        <span class="text-monospace">
+            {{object.title}}
+        </span><br>
+        <span class="font-weight-bold">
+            {% get_verbose_field_name object "created_at" %}:
+        </span>
+        <span class="text-monospace">
+            {{object.created_at}}
+        </span>
+    </li>
+    {% block container_blog_comment %}
+    {% include 'blog/include_html/comment.html'%}
+    <!--Подключение шаблона комментарий-->
+    <!-- Connecting the comment template -->
+    {% endblock %}
+</div>
+{% endblock %}

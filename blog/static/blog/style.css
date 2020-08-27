@@ -1,0 +1,74 @@
+/* =======> comment.html */
+
+.container-comments {
+  margin: 1rem;
+  padding: 1rem;
+
+  border: 1px solid  #d7dce0;
+  border-radius: 15px;
+}
+
+.answer-auxiliary {
+  width: 100%;
+
+  color: #04213d;
+  font-weight: bold;
+  cursor: pointer;
+  outline: none;
+}
+
+.answer {
+  font-weight: normal;
+  color: #264961;
+}
+
+.answer:hover {
+
+  font-weight: bold;
+  color: #04213d;
+  text-decoration: none;
+
+  cursor: pointer;
+}
+
+.display-none {
+  display: none;
+}
+
+.container-more-comments {
+  width: 100%;
+  text-align: center;
+}
+
+.JSexpandСomment {
+  padding: 8px 25px 8px 25px;
+}
+
+.children {
+  margin-left: 5rem;
+  padding: 0;
+
+  list-style-type: none;
+  outline: none;
+  cursor: default;
+
+}
+
+/* =======> Comment_likes_or_dislikes.html */
+
+.comment_btn_likes_or_dislikes {
+  background: none;
+  border: none;
+}
+
+.comment_btn_likes_or_dislikes:hover {
+  cursor: pointer;
+}
+
+.comment_btn_likes_or_dislikes:active {
+  outline: none;
+}
+
+.comment_likes_and_dislikes_margin {
+  margin-right: 0.3rem;
+}

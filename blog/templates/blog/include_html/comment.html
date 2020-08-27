@@ -1,0 +1,114 @@
+{% load verbose_names %} <!-- File: templatetags/verbose_names.py-->
+<!--Simple tag для получения verbose_name-->
+<!--Simple tag for getting verbose_name-->
+{% load static %}
+
+<div class="blog-detail-comments">
+    <span class="font-weight-bold">Комментарии:</span> 
+    <span class="text-monospace">({{object.blogcomment_set.count}})</span>
+
+<!--Форма добавления комментарий-->
+<!--Add comment form-->
+
+        {% if user.is_authenticated %}
+            <form class="mt-3" action="" method="POST">
+                {% csrf_token %}
+                    {{form.comment_text}}
+                    {{form.error}}
+                <div class="mt-2  text-right">
+                    <button class="btn btn-dark" type="submit">Отправить</button>
+                </div>
+            </form>
+
+        {% else %}
+            <p class = ".text-danger">Пожалуйста, авторизуйтесь, чтобы оставлять комментарии</p>
+        {% endif %}
+    
+
+<!-- Обход комментарий -->
+<!-- Bypass comment -->
+
+<div class="container-comments">
+        {% load mptt_tags %}
+        <ul>
+            {% recursetree comments %}
+                <li data-circle=true class= "{% if node.level == 0 %} JSCountComment {% endif %}">
+                    <div class="row" style="font-weight: normal;">
+                        <div class="col-md-6">
+                            <span class="font-weight-bold text-dark">
+                                {% get_verbose_field_name node "name" %}: 
+                            </span>
+                            <span class="text-monospace text-dark">{{ node.name }}</span><br>
+                            <span class="text-monospace text-dark">{{node.publication_date}}</span><br>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            {% block container_blog_comment_likes_or_dislikes %}
+                                {% include 'blog/include_html/comment_likes_or_dislikes.html'%}
+                            {% endblock %}
+                        </div>
+                    </div>
+                    <span class="text-monospace text-dark" style="font-weight: normal;">{{node.comment_text}}</span><br>
+
+<!-- Определение уровни вложенности коментарий -->  
+                    {% if user.is_authenticated and node.level < 2 %} <!--================================-->
+<!-- Determining the nesting levels of comments -->
+                    <span class="answer-auxiliary answer" data-box=true>Ответить
+                        <div  class = 'jsClassChange display-none'>
+                            <form action="" method="POST">
+                                {% csrf_token %}
+                                <div class="jsPlaceholder">
+                                    {{ form.comment_text }}
+                                    {{ form.error }}
+                                    <input class='display-none' type="hidden" name="parent" value="{{ node.pk }}">
+                                    <!--Определение предка комментария--> <!-- Definition of the parent of the comment -->
+                                </div>
+                                <div class="mt-2 text-right">
+                                    <button class="btn btn-dark" type="submit">Отправить</button>
+                                </div>
+                            </form>
+                        </div>
+                    </span>
+<!--Если уровни вложенности комментариев превышает указанного, тогда прекратить вложения комментарий.  
+    Построить остальные ответные комментарии: "Имя пользователя комментария, комментария к пользователю"-->
+                    {% else %}
+<!--If the nesting levels of comments exceed the specified, then stop nesting the comment. 
+    Build the rest of the response comments: "Username of comment, user comment"-->
+                    <span class="jsAnswerUser answer-auxiliary answer" data-box=true>Ответить
+                        <div  class = 'jsClassChange display-none'>
+                            <form action="" method="POST">
+                                {% csrf_token %}
+                                <div class="jsPlaceholder">
+                                    {{form.comment_text}}
+                                    {{form.error}}
+                                    <input class = "display-none" type="hidden" name="parent" value="{{ node.parent.pk }}">
+                                    <!--Определение предка у предка комментария--> 
+                                    <!--Determining the ancestor of the comment ancestor-->
+                                    <input class = "jsNameUser display-none" type = "hidden" value = "{{node.name}}">
+                                    <!--Определения имени пользователя у предка комментария, для построения ответа-->
+                                    <!--Determining the username of the ancestor of the comment to build a response-->
+                                </div>
+                                <div class="mt-2 text-right">
+                                    <button class="jsResponseToUser btn btn-dark" type="submit">Отправить</button>
+                                </div>
+                            </form>
+                        </div>
+                    </span>
+                    {% endif %}
+                    {% if not node.is_leaf_node %}
+                    <span class="jsAnswers answer-auxiliary answer {%if user.is_authenticated%} blog-detail-comments-indentation {% endif %} text-decoration-none" data-square=true>Ответы ({{node.cnt}})
+                        <ul class="children display-none">
+                            {{ children }}
+                        </ul>
+                    </span>
+                    {% endif %}
+                </li>            
+            {% endrecursetree %}
+        </ul> 
+
+        <div class = "container-more-comments">
+            <a class="JSexpandСomment btn btn-dark" type="submit">Еще комментарии</a>
+        </div>
+
+        <script src = "{% static 'blog/script.js' %}"></script>
+    </div>
+</div>

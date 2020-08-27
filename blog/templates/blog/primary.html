@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block content %}
+
+<div class="container mt-3">
+    {% for obj in object_list %}
+        <div class="card text-center border-dark mt-3">
+            <div class="card-header text-white bg-dark">{{ obj.title }}</div>
+            <div class="card-body">
+                <h5 class="card-title">Go to comments</h5>
+                <p class="card-text">Перейти к коментариям</p>
+                <a href="{{obj.get_absolute_url}}" class="btn btn-dark">Go to | Перейти</a>
+            </div>
+            <div class="card-footer text-white bg-dark">
+                {{ obj.created_at }}
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
